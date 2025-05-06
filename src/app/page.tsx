@@ -1,23 +1,17 @@
-import Image from "next/image"; 
-import favicon from  "../app/favicon.ico"
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DarkToggleMode } from "@/components/ui/DarkModeToggle";
-import Header from "@/components/ui/Header";
-import { AuthCard } from "./{Auth)/Card";
+import ProtectedRoute from "@/actions/middleware";
+import Header from "@/components/Header";
 
 function Home() {
-
   const user = null;
 
   const loading = false;
   return (
     <div>
-      <Header/>
-      <AuthCard/>
+      <ProtectedRoute>
+        <Header />
+      </ProtectedRoute>
     </div>
   );
 }
 
-
-export default Home
+export default Home;
