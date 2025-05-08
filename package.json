@@ -9,6 +9,9 @@
     "lint": "next lint",
     "migrate": "pnpm dlx prisma generate && cat .env.local | xargs -I {} env {} pnpm dlx prisma migrate dev"
   },
+    "prisma": {
+      "schema": "./src/prisma/schema.prisma"
+    },
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "@radix-ui/react-dialog": "^1.1.13",

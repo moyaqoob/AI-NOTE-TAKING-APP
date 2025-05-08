@@ -1,16 +1,30 @@
-import ProtectedRoute from "@/actions/middleware";
-import Header from "@/components/Header";
+import { getUser } from "@/auth/server";
+import AskAIButton from "@/components/AskAIButton";
+import NewNoteButton from "@/components/NewNoteButton";
+import NoteTextInput from "@/components/NoteTextInput";
 
-function Home() {
-  const user = null;
+type Props = {
+  searchParams: Promise<{[Key: string]: string | string[] | undefined}>
+}
 
-  const loading = false;
+
+async function Home({searchParams}: Props) {
+  const noteIdParam = (await searchParams).noteId
+  const user = getUser();
+
+  const noteId = Array.isArray(noteIdParam)
+  ? noteIdParam![0] : noteIdParam || " "
+  
   return (
-    <div>
-      <ProtectedRoute>
-        <Header />
-      </ProtectedRoute>
-    </div>
+    <div className="flex flex-col items-center fixed justify-center w-full h-full space-y-6">
+  {/* Buttons Section */}
+  <div className="flex items-center space-x-4">
+    <AskAIButton user={user} />
+    <NewNoteButton user={user} />
+  </div>
+      <NoteTextInput noteId={noteId} startingNoteText={noteId || ""} />
+  </div>
+
   );
 }
 

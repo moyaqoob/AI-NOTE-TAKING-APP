@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "sonner";
 import { SidebarProvider } from "@/components/ui/sidebar";
-
+import Header from "@/components/Header";
+import { AppSidebar } from "@/components/ui/app-sidebar";
+import NoteProvider from "@/providers/note-provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,20 +31,28 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <NoteProvider>
+
         <ThemeProvider
           attribute={"class"}
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
-     
-            
-
-
-          {children}
+          > 
+        <SidebarProvider>
+          <AppSidebar/>
+          <div className="flex min-h-screen w-full flex-col">
+              <Header/>
+              <main className="flex flex-1 flex-col px-44 pt-10 xl:px-8">
+                {children}
+              </main>
+          </div>
+          
+        </SidebarProvider>
        
           <Toaster/>
         </ThemeProvider>
+      </NoteProvider>
       </body>
     </html>
   );
