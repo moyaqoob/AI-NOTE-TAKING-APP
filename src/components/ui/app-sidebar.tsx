@@ -11,24 +11,23 @@ import prisma from "@/prisma/prisma"
 import Link from "next/link"
 import { Note } from "@prisma/client"
 import SideBarGroupContent from "./SidebarGroupContext"
+
 export async function AppSidebar() {
     const user = await getUser()
 
     let notes:Note[] = [];
     
     if(user){
-
-            notes =await prisma.note.findMany({
-                where:{
-                    id:user?.user.id
-                },
-                orderBy:{
-                    updatedAt:"desc"
-                }
-            }) 
+        notes =await prisma.note.findMany({
+            where:{
+                id:user?.id
+            },
+            orderBy:{
+                updatedAt:"desc"
+            }
+        }) 
     }
-    console.log(user?.user.email)
-    const userName = user?.user.email?.split('@')[0].substring(0,2);
+    const userName = user?.email?.split('@')[0].substring(0,2);
     
     
     return (
@@ -44,13 +43,14 @@ export async function AppSidebar() {
                 
             ):(
                 <p>
-                    <Link href={'/login'}>
-                        Login
-                    </Link>{" "}
+                   
+                    Login
+                    
                     to see your notes
                 </p>
             )}
           </SidebarGroupLabel>
+          
          {user && <SideBarGroupContent notes={notes}/>}
         </SidebarContent>
         <SidebarFooter />

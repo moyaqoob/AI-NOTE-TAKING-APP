@@ -39,8 +39,12 @@ export async function getUser(){
     console.log("error from the get user")
      return null;
   }
-  console.log(userObject.data.user);
+  console.log(userObject);
   console.log("hi there")
 
-  return userObject.data;
+  return userObject.data.user;
+}
+
+export async function askAI(){
+  
 }

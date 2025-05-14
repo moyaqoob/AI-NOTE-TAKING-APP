@@ -1,1 +1,1 @@
-export const debounceTimeout = 100000
+export const debounceTimeout = 1000

@@ -16,8 +16,7 @@ function Header() {
   useEffect(() => {
     async function fetchUser() {
       const fetchedUser = await getUser();
-      setUser(fetchedUser?.user);
-      console.log(JSON.stringify(fetchedUser?.user) + "new user");
+      setUser(fetchedUser?.id);
     }
     fetchUser();
   }, []); // Empty dependency array ensures this runs once on mount

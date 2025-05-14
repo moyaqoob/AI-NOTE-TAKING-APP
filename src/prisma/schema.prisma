@@ -15,20 +15,19 @@ datasource db {
 
 model User{
   id  String @id @default(uuid()) 
-  name String
-  email String @unique
+  name String?
+  email String? @unique
   notes Note[]
-  password String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt @default(now())
 
 }
 
 model Note{
     id String @id @default(uuid())
     text String
-    author User  @relation(fields: [authorId],references: [id])
-    authorId String
+    author User?  @relation(fields: [authorId],references: [id])
+    authorId String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt @default(now())
 }
