@@ -54,7 +54,7 @@ function NewNoteButton({ user }: Props) {
     onClick={handleClickNewNote}
     variant={"secondary"}
     disabled={loading}
-    className ="text-lg xl:text-md border duration-75 transition-all hover:bg-red-500 hover:duration-200  ">
+    className ="text-lg xl:text-md border duration-75 transition-all hover:bg-green-700 hover:duration-200  ">
       {loading ? <Loader2 className="animate-spin" /> : "New Note"}
     </Button>
   );

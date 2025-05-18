@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LogoutButton } from "./Logout";
 import { DarkToggleMode } from "./ui/DarkModeToggle";
+import { SidebarTrigger } from "./ui/sidebar";
+import router, { useRouter } from "next/navigation"
 
 type User = {
   user: string;
@@ -12,19 +14,25 @@ type User = {
 
 function Header() {
   const [user, setUser] = useState<any | null>(null);
-
+  
   useEffect(() => {
     async function fetchUser() {
       const fetchedUser = await getUser();
       setUser(fetchedUser?.id);
     }
     fetchUser();
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []); 
+
+  const homePage = ()=>{
+    const router = useRouter();
+    router.replace("/");
+  }
 
   return (
     <>
       <header className="bg-popover relative flex justify-between items-center px-3 py-4 sm:px-8 shadow-md shadow-gray-500">
-        <Link href={"/"} className="flex items-center gap-3">
+        <SidebarTrigger className="absolute left-1"/>
+        <Link href={"/"} className="flex items-center gap-3" onClick={homePage}>
           <Image
             src="/favicon.ico" // Replace with your actual favicon path
             className="rounded-full"

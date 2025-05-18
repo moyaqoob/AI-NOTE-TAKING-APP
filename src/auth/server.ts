@@ -48,3 +48,11 @@ export async function getUser(){
 export async function askAI(){
   
 }
+
+// export async function getNote(){
+//    const userId = await prisma?.note.findFirstOrThrow({
+//     where:{
+//       id:
+//     }
+//    })
+// }
