@@ -3,7 +3,6 @@ import { useNote } from "@/hooks/useNote";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Textarea } from "./ui/textarea";
-import { updateAction } from "@/actions/notes";
 
 type Props = {
   noteId: string;
@@ -21,7 +20,7 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
   const handleUpdateNote = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value
     setNoteText(text);
-    updateAction(noteIdParam,noteText)
+    
   };
 
 

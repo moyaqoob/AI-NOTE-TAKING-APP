@@ -17,9 +17,18 @@ function NewNoteButton({ user }: Props) {
   const [loading, setloading] = useState<boolean | undefined>(false);
 
   const router = useRouter();
-  const {noteText}  = useNote();
+  const {noteText,setNoteText}  = useNote();
 
   const handleClickNewNote = async () => {
+    if(noteText == ""){
+      toast.error('empty input',{
+        duration:2000,
+        description:"write something..",
+        className:"bg-red-200 "
+      })
+      return;
+    }
+
     if (!user) {
       router.push("/login");
     } else {
@@ -46,6 +55,9 @@ function NewNoteButton({ user }: Props) {
       });
 
       setloading(false);
+      router.push("/")
+      setNoteText(" ")
+      
     }
   };
 

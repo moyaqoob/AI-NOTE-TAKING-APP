@@ -41,6 +41,7 @@ function SideBarGroupContent({ notes }: Props) {
     return fuse.search(searchText).map((result) => result.item);
   }, [searchText, fuse, localNotes]);
 
+
   const deleteNoteLocally = (noteId: string) => {
     setLocalNotes((prev) => prev.filter((note) => note.id !== noteId));
   };
