@@ -1,4 +1,4 @@
-import { getUser } from "@/auth/server";
+import { getUser } from "@/actions/server";
 import {
   Sidebar,
   SidebarContent,
@@ -38,9 +38,8 @@ export async function AppSidebar() {
       <SidebarContent className="custom-scrollbar">
         <SidebarGroupLabel className="mb-2 mt-2">
           {user ? (
-            <div className="pl-3 text-lg">
-              Your Notes{" "}
-              <span className="text-2xl capitalize">{userName}</span>
+            <div className="pl-3 text-2xl text-center relative left-14 pb-5 uppercase font-serif top-5">
+               Notes{" "}
             </div>
           ) : (
             <p>Login to see your notes</p>

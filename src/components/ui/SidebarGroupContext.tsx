@@ -7,7 +7,7 @@ import { SidebarMenu, SidebarMenuItem, SidebarGroupContent as SideGroupContentSh
 import Fuse from 'fuse.js';
 import DeleteNoteItem from './DeleteNoteItem';
 import SelectNoteButton from './SelectNoteButton';
-import { getUser } from '@/auth/server';
+import { getUser } from '@/actions/server';
 
 type Props = {
   notes: Note[];
@@ -34,10 +34,8 @@ function SideBarGroupContent({ notes }: Props) {
   // Filtered notes based on search text
   const filteredNotes = useMemo(() => {
     if (!searchText || !fuse){
-         console.log("enter the text") 
          return localNotes;
     }
-    console.log(searchText)
     return fuse.search(searchText).map((result) => result.item);
   }, [searchText, fuse, localNotes]);
 

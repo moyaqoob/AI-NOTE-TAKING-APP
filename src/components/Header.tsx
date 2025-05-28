@@ -1,5 +1,5 @@
 "use client";
-import { getUser } from "@/auth/server";
+import { getUser } from  "@/actions/server";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -41,7 +41,7 @@ function Header() {
             alt="App logo"
             priority
           />
-          <h1 className="text-xl font-semibold">
+          <h1 className="text-2xl font-serif " >
             AI-<span>Notes App</span>
           </h1>
         </Link>

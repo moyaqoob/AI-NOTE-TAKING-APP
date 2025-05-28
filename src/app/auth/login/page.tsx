@@ -1,9 +1,8 @@
-import { AuthCard } from "../api/AuthForm";
+import { AuthCard } from "../AuthForm";
 
 const Signin = () => {
   return (
-    <div >
-   
+    <div>
       <AuthCard type="login" />
     </div>
   );

@@ -1,8 +1,8 @@
-import { AuthCard } from "../api/AuthForm";
+import { AuthCard } from "../AuthForm";
 
 const SignUp = () => {
   return (
-    <div >
+    <div>
       <AuthCard type="signup" />
     </div>
   );

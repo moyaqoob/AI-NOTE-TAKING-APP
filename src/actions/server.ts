@@ -36,18 +36,13 @@ export async function getUser(){
   const userObject = await auth.getUser();
 
   if(userObject.error){
-    console.log("error from the get user")
      return null;
   }
-  console.log(userObject);
-  console.log("hi there")
+  
 
   return userObject.data.user;
 }
 
-export async function askAI(){
-  
-}
 
 // export async function getNote(){
 //    const userId = await prisma?.note.findFirstOrThrow({

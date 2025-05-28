@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/auth/server";
+import { createClient } from "@/actions/server";
 import prisma from "@/prisma/prisma";
 export const logInUserAction = async (email: string, password: string) => {
   try {
@@ -42,7 +42,6 @@ export const signUpUserAction = async (
         password: "123123",
       },
     });
-    console.log("created the user");
 
     return { errorMessage: null };
   } catch (error: any) {

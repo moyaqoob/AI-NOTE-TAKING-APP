@@ -1,80 +1,155 @@
-"use server"
-import { createClient, getUser } from '@/auth/server';
-import prisma from '@/prisma/prisma';
-import uuid4 from 'uuid4';
-export const createNoteAction = async (noteId:string,text:string) => {
-    try{
-        const user = await getUser();
-        if(!user) throw new Error("you must be logged in to update a note")
-        await prisma?.note.create({
-            data:{
-                id:noteId,
-                authorId:user.id,
-                text:text
-            }
-        })
-        return {errorMessage:null}
-    }catch(err){
-        throw new Error("error updating action")
-    }
+"use server";
+import { getUser } from "@/actions/server";
+import prisma from "@/prisma/prisma";
+// Remove incorrect import and import correct type from OpenAI SDK
+import ai from "./openai";
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+import { response } from "express";
+
+export const createNoteAction = async (noteId: string, text: string) => {
+  try {
+    const user = await getUser();
+    if (!user) throw new Error("you must be logged in to update a note");
+    await prisma?.note.create({
+      data: {
+        id: noteId,
+        authorId: user.id,
+        text: text,
+      },
+    });
+    return { errorMessage: null };
+  } catch (err) {
+    throw new Error("error updating action");
+  }
 };
 
 export const updateAction = async (noteId: string, text: string) => {
-    console.log("Updating note with ID:", noteId, "and text:", text);
 
-    try {
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to update a note");
+  try {
+    const user = await getUser();
+    if (!user) throw new Error("You must be logged in to update a note");
 
-        if (!noteId || !text) {
-            throw new Error("Invalid noteId or text");
-        }
-
-        console.log("console reached here");
-
-        const updatePromise = new Promise(async (resolve, reject) => {
-            try {
-                await prisma?.note.update({
-                    where: { id: noteId },
-                    data: { text },
-                });
-                resolve(null); // Resolve on success
-            } catch (error) {
-                reject(error); // Reject on error
-            }
-        });
-
-        updatePromise.catch((err) => console.error("Error updating note in promise:", err));
-
-        return { errorMessage: null };
-    } catch (err) {
-        console.error("Error updating note:", err);
-        throw new Error("Error updating action");
+    if (!noteId || !text) {
+      throw new Error("Invalid noteId or text");
     }
-};
 
+
+    const updatePromise = new Promise(async (resolve, reject) => {
+      try {
+        await prisma?.note.update({
+          where: { id: noteId },
+          data: { text },
+        });
+        resolve(null); // Resolve on success
+      } catch (error) {
+        reject(error); // Reject on error
+      }
+    });
+
+    updatePromise.catch((err) =>
+      console.error("Error updating note in promise:", err)
+    );
+
+    return { errorMessage: null };
+  } catch (err) {
+    console.error("Error updating note:", err);
+    throw new Error("Error updating action");
+  }
+};
 
 export const deleteNoteAction = async (noteId: string) => {
-    console.log("console log"+noteId)
-    try {
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to update a note");
+  try {
+    const user = await getUser();
+    if (!user) throw new Error("You must be logged in to update a note");
 
-        if (!noteId) {
-            throw new Error("Invalid noteId or text");
-        }
-        console.log("console reached here")
-
-        await prisma?.note.delete({
-            where: { id: noteId, authorId:user.id },
-        });
-        return { errorMessage: null };
-    } catch (err) {
-        console.error("Error deleting note:", err);
-        throw new Error("Error deleting action");
+    if (!noteId) {
+      throw new Error("Invalid noteId or text");
     }
+
+    await prisma?.note.delete({
+      where: { id: noteId, authorId: user.id },
+    });
+    return { errorMessage: null };
+  } catch (err) {
+    console.error("Error deleting note:", err);
+    throw new Error("Error deleting action");
+  }
 };
 
+export const askAIAboutNotesAction = async ({
+  newQuestion,
+  responses,
+}: {
+  newQuestion: string[];
+  responses: string[];
+}) => {
+  try {
+    const user = await getUser();
+    if (!user) throw new Error("You must be logged in to ask AI questions");
 
+    const notes = await prisma.note.findMany({
+      where: { authorId: user.id },
+      orderBy: { createdAt: "desc" },
+      select: { text: true, createdAt: true, updatedAt: true },
+    });
 
+    if (notes.length === 0) {
+      return "You don't have any notes yet.";
+    }
 
+    const formattedNotes = notes
+      .map(
+        (note) =>
+          `
+          <strong>Text:</strong> ${note.text} <br>
+          <strong>Created At:</strong> ${note.createdAt} <br>
+          <strong>Last Updated:</strong> ${note.updatedAt} <br>
+          `.trim()
+      )
+      .join("<br>");
+
+    const messages: { role: string; data: { text: string } }[] = [
+      {
+        role: "user",
+        data: {
+          text: `
+            You are a helpful assistant that answers questions about a user's notes. 
+            Assume all questions are related to the user's notes. 
+            Make sure that your answers are not too verbose and you speak succinctly. 
+            Your responses MUST be formatted in clean, valid HTML with proper structure. 
+            Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <h1> to <h6>, and <br> when appropriate. 
+            Do NOT wrap the entire response in a single <p> tag unless it's a single paragraph. 
+            Avoid inline styles, JavaScript, or custom attributes.
+
+            Rendered like this in JSX:
+            <p dangerouslySetInnerHTML={{ __html: YOUR_RESPONSE }} />
+
+            Here are the user's notes:
+            ${formattedNotes}
+          `.trim(),
+        },
+      },
+    ];
+
+    console.log("process request above");
+
+    for (let i = 0; i < newQuestion.length; i++) {
+      messages.push({ role: "user", data: { text: newQuestion[i] } });
+      if (responses.length > i) {
+        messages.push({ role: "assistant", data: { text: responses[i] } });
+      }
+    }
+
+    const completion = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: messages,
+    });
+
+    console.log("process request below");
+
+    return completion.text || "No response generated.";
+  } catch (err) {
+    console.error("Error processing AI question:", err);
+    throw new Error("Error processing your request. Please try again.");
+  }
+};

@@ -1,4 +1,4 @@
-import { getUser } from "@/auth/server";
+import { getUser } from "@/actions/server";
 import AskAIButton from "@/components/AskAIButton";
 import NewNoteButton from "@/components/NewNoteButton";
 import NoteTextInput from "@/components/NoteTextInput";
