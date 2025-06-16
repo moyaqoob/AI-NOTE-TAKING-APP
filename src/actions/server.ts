@@ -1,53 +1,58 @@
-"use server"
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+"use server";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export async function createClient() {
-  const cookieStore = await cookies()
+  const cookieStore = await cookies();
 
-  const client =  createServerClient(
-    process.env.SUPABASE_URL || '',
-    process.env.SUPABASE_SECRET || '',
+  const client = createServerClient(
+    process.env.SUPABASE_URL || "",
+    process.env.SUPABASE_SECRET || "",
     {
       cookies: {
         getAll() {
-          return cookieStore.getAll()
+          return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
-            )
-          } catch {
-            
-          }
+            );
+          } catch {}
         },
       },
     }
-  )
+  );
 
   return client;
 }
 
-
-export async function getUser(){
-  const {auth}  = await createClient();
+export async function getUser() {
+  const { auth } = await createClient();
 
   const userObject = await auth.getUser();
 
-  if(userObject.error){
-     return null;
+  if (userObject.error) {
+    return null;
   }
-  
 
   return userObject.data.user;
 }
 
+export async function logout() {
+  try {
+    const client = await createClient();
+    const { error } = await client.auth.signOut();
 
-// export async function getNote(){
-//    const userId = await prisma?.note.findFirstOrThrow({
-//     where:{
-//       id:
-//     }
-//    })
-// }
+    if (error) {
+      console.error("Error during logout:", error.message);
+      throw new Error("Failed to log out. Please try again.");
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Unexpected error during logout:", err.message);
+    throw new Error("An unexpected error occurred during logout.");
+  }
+}
+

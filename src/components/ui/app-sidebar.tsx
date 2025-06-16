@@ -3,24 +3,21 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import prisma from "@/prisma/prisma";
 import { Note } from "@prisma/client";
 import SideBarGroupContent from "./SidebarGroupContext";
-import { routeModule } from "next/dist/build/templates/app-route";
 
 export async function AppSidebar() {
   const user = await getUser();
-
 
   let notes: Note[] = [];
   if (user) {
     try {
       notes = await prisma.note?.findMany({
         where: {
-          authorId:user.id, // Use the correct foreign key
+          authorId: user.id, // Use the correct foreign key
         },
         orderBy: {
           updatedAt: "desc",
@@ -33,23 +30,22 @@ export async function AppSidebar() {
 
   const userName = user?.email?.split("@")[0].substring(0, 2);
 
+  // If the user is not logged in, return null (sidebar will not render)
+  if (!user) {
+    return null;
+  }
+
   return (
     <Sidebar>
-      <SidebarContent className="custom-scrollbar">
+      <SidebarContent className=" bg-[#032372]">
         <SidebarGroupLabel className="mb-2 mt-2">
-          {user ? (
-            <div className="pl-3 text-2xl text-center relative left-14 pb-5 uppercase font-serif top-5">
-               Notes{" "}
-            </div>
-          ) : (
-            <p>Login to see your notes</p>
-          )}
+          <div className="pl-3 text-2xl text-center relative left-14 pb-5 uppercase font-serif top-5">
+            Notes{" "}
+          </div>
         </SidebarGroupLabel>
 
-        {user && <SideBarGroupContent notes={notes}/>}
-       
+        <SideBarGroupContent notes={notes} />
       </SidebarContent>
-      <SidebarFooter />
     </Sidebar>
   );
 }

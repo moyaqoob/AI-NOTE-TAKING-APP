@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "./ui/button";
+import { logout } from "@/actions/server";
 
 export const LogoutButton = () => {
   const [loading, setLoading] = useState(false);
@@ -14,14 +15,15 @@ export const LogoutButton = () => {
     try {
       setLoading(true);
 
-      // Simulate an API call or logout process
+      await logout();
+
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      toast.success("Successfully logged out!");
+      toast.success(" logged out!");
       setLoading(false);
 
       // Navigate to the login page
-      router.push("/login");
+      router.push("/auth/login");
     } catch (err) {
       setLoading(false);
       toast.error("Something went wrong during logout!");

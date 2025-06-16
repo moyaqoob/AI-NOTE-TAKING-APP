@@ -52,7 +52,7 @@ export const AuthCard = ({ type }: AuthCardProps) => {
 
   return (
     <form action={handleSubmit}>
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center h-full pt-10">
         <Card>
           <TextAnimator text="Welcome to AI-NoteTaker" />
 

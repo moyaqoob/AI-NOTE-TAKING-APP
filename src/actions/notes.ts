@@ -104,25 +104,25 @@ export const askAIAboutNotesAction = async ({
       .join("<br>");
 
     const messages: { role: "user" | "assistant"; content: string }[] = [
-      {
-        role: "user",
-        content: `
-          You are a helpful assistant that answers questions about a user's notes. 
-          Assume all questions are related to the user's notes. 
-          Make sure that your answers are not too verbose and you speak succinctly. 
-          Your responses MUST be formatted in clean, valid HTML with proper structure. 
-          Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <h1> to <h6>, and <br> when appropriate. 
-          Do NOT wrap the entire response in a single <p> tag unless it's a single paragraph. 
-          Avoid inline styles, JavaScript, or custom attributes.
+  {
+    role: "user",
+    content: `
+      You are a concise and helpful assistant that answers questions about the user's notes. 
+      Your responses must:
+      - Be directly relevant to the user's notes.
+      - Include a brief 20-word summary about the topic, emphasizing key points.
+      - Be formatted in valid HTML with proper tags like <p>, <strong>, <em>, <ul>, etc.
+      - Avoid inline styles, JavaScript, or unnecessary attributes.
 
-          Rendered like this in JSX:
-          <p dangerouslySetInnerHTML={{ __html: YOUR_RESPONSE }} />
+      Responses will render as:
+      <p dangerouslySetInnerHTML={{ __html: YOUR_RESPONSE }} />
 
-          Here are the user's notes:
-          ${formattedNotes}
-        `.trim(),
-      },
-    ];
+      Here are the user's notes:
+      ${formattedNotes}
+    `.trim(),
+  },
+];
+
 
     console.log("Process request above");
 

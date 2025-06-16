@@ -11,26 +11,36 @@ type Props = {
 async function HomePage({ searchParams }: Props) {
   const noteIdParam = (await searchParams).noteId;
   const user = await getUser();
-  
+
   const noteId = Array.isArray(noteIdParam)
     ? noteIdParam![0]
     : noteIdParam || "";
-
-    
 
   const note = await prisma.note.findUnique({
     where: { id: noteId, authorId: user?.id },
   });
 
   return (
-    <div className="flex h-full flex-col items-center gap-4">
-      <div className="flex w-full max-w-4xl justify-end gap-2">
+    <div className="flex h-[92vh] bg-gradient-to-b from-[#0a0a0a] to-[#1a2a6c]  flex-col items-center -mt-10 gap-8  text-gray-200 ">
+      {/* Header Section */}
+      <div className="text-center">
+        <h1 className="text-4xl font-bold pt-7">Welcome to AI Notes</h1>
+        <p className="text-lg text-gray-400">
+          Your personal AI-powered note-taking assistant.
+        </p>
+      </div>
+
+      {/* Button Section */}
+      <div className="flex w-full max-w-4xl justify-end gap-4">
         <AskAIButton user={user} />
         <NewNoteButton user={user} />
       </div>
 
-      <NoteTextInput noteId={noteId||""} startingNoteText={note?.text || ""} />
-
+      {/* Note Input Section */}
+        <NoteTextInput
+          noteId={noteId || ""}
+          startingNoteText={note?.text || ""}
+        />
     </div>
   );
 }

@@ -18,25 +18,19 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
   }, [noteIdParam]);
 
   const handleUpdateNote = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value
+    const text = e.target.value;
     setNoteText(text);
-    
   };
 
-
-  
   return (
     <div className="relative flex items-center justify-center h-full w-full">
-      <div className="absolute top-0 brightness-105  left-0 bg-green-600  w-36 h-[50px] rounded-lg blur-3xl"></div>
-
       <div className="relative w-full max-w-md px-4 sm:px-6 lg:px-8">
         <Textarea
-          className="relative z-10 w-full h-full p-5 border border-white rounded-md shadow-lg shadow-white outline-none sm:p-6 lg:p-8"
+          className="relative z-10 w-full h-full p-5 border text-xl font-medium border-white rounded-md shadow-lg shadow-white outline-none sm:p-6 lg:p-8 placeholder:text-transparent placeholder:bg-clip-text placeholder:bg-gradient-to-b placeholder:from-[#ff7a18] placeholder:to-[#e540b1]"
           placeholder="Type your notes here"
           value={noteText}
           onChange={handleUpdateNote}
         />
-        
       </div>
     </div>
   );
