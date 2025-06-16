@@ -1,11 +1,9 @@
 "use server";
 import { getUser } from "@/actions/server";
 import prisma from "@/prisma/prisma";
+import { GoogleGenAI } from "@google/genai";
 // Remove incorrect import and import correct type from OpenAI SDK
-import ai from "./openai";
-import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
-import { response } from "express";
-
+import { GoogleGenerativeAI } from "@google/generative-ai";
 export const createNoteAction = async (noteId: string, text: string) => {
   try {
     const user = await getUser();
@@ -24,7 +22,6 @@ export const createNoteAction = async (noteId: string, text: string) => {
 };
 
 export const updateAction = async (noteId: string, text: string) => {
-
   try {
     const user = await getUser();
     if (!user) throw new Error("You must be logged in to update a note");
@@ -32,7 +29,6 @@ export const updateAction = async (noteId: string, text: string) => {
     if (!noteId || !text) {
       throw new Error("Invalid noteId or text");
     }
-
 
     const updatePromise = new Promise(async (resolve, reject) => {
       try {
@@ -87,7 +83,7 @@ export const askAIAboutNotesAction = async ({
     const user = await getUser();
     if (!user) throw new Error("You must be logged in to ask AI questions");
 
-    const notes = await prisma.note.findMany({
+    const notes = await prisma.note?.findMany({
       where: { authorId: user.id },
       orderBy: { createdAt: "desc" },
       select: { text: true, createdAt: true, updatedAt: true },
@@ -98,9 +94,8 @@ export const askAIAboutNotesAction = async ({
     }
 
     const formattedNotes = notes
-      .map(
-        (note) =>
-          `
+      .map((note) =>
+        `
           <strong>Text:</strong> ${note.text} <br>
           <strong>Created At:</strong> ${note.createdAt} <br>
           <strong>Last Updated:</strong> ${note.updatedAt} <br>
@@ -108,46 +103,57 @@ export const askAIAboutNotesAction = async ({
       )
       .join("<br>");
 
-    const messages: { role: string; data: { text: string } }[] = [
+    const messages: { role: "user" | "assistant"; content: string }[] = [
       {
         role: "user",
-        data: {
-          text: `
-            You are a helpful assistant that answers questions about a user's notes. 
-            Assume all questions are related to the user's notes. 
-            Make sure that your answers are not too verbose and you speak succinctly. 
-            Your responses MUST be formatted in clean, valid HTML with proper structure. 
-            Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <h1> to <h6>, and <br> when appropriate. 
-            Do NOT wrap the entire response in a single <p> tag unless it's a single paragraph. 
-            Avoid inline styles, JavaScript, or custom attributes.
+        content: `
+          You are a helpful assistant that answers questions about a user's notes. 
+          Assume all questions are related to the user's notes. 
+          Make sure that your answers are not too verbose and you speak succinctly. 
+          Your responses MUST be formatted in clean, valid HTML with proper structure. 
+          Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <h1> to <h6>, and <br> when appropriate. 
+          Do NOT wrap the entire response in a single <p> tag unless it's a single paragraph. 
+          Avoid inline styles, JavaScript, or custom attributes.
 
-            Rendered like this in JSX:
-            <p dangerouslySetInnerHTML={{ __html: YOUR_RESPONSE }} />
+          Rendered like this in JSX:
+          <p dangerouslySetInnerHTML={{ __html: YOUR_RESPONSE }} />
 
-            Here are the user's notes:
-            ${formattedNotes}
-          `.trim(),
-        },
+          Here are the user's notes:
+          ${formattedNotes}
+        `.trim(),
       },
     ];
 
-    console.log("process request above");
+    console.log("Process request above");
 
     for (let i = 0; i < newQuestion.length; i++) {
-      messages.push({ role: "user", data: { text: newQuestion[i] } });
+      messages.push({ role: "user", content: newQuestion[i] });
       if (responses.length > i) {
-        messages.push({ role: "assistant", data: { text: responses[i] } });
+        messages.push({ role: "assistant", content: responses[i] });
       }
     }
 
-    const completion = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: messages,
-    });
+    console.log(
+      "Messages being sent to AI:",
+      JSON.stringify(messages, null, 2)
+    );
 
-    console.log("process request below");
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY || "");
 
-    return completion.text || "No response generated.";
+    const textResult = await genAI
+      .getGenerativeModel({ model: "gemini-2.0-flash" })
+      .generateContent(messages.map(msg => msg.content).join('\n'));
+
+    console.log("Process request below");
+
+    if (
+      !textResult ||
+      !textResult.response 
+    ) {
+      throw new Error("No response generated by the AI model.");
+    }
+
+    return textResult.response.text().substring(0,50) || "No response generated.";
   } catch (err) {
     console.error("Error processing AI question:", err);
     throw new Error("Error processing your request. Please try again.");

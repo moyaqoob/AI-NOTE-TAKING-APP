@@ -16,7 +16,7 @@ type AuthCardProps = {
 };
 
 export const AuthCard = ({ type }: AuthCardProps) => {
-  const isLoginFrom = type === "login";
+  const isLoginForm = type === "login";
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -31,21 +31,21 @@ export const AuthCard = ({ type }: AuthCardProps) => {
       let title;
       let description;
 
-      if (isLoginFrom) {
+      if (isLoginForm) {
         result = await logInUserAction(email, password);
         title = "Logged in";
         description = "You have been successfully logged in";
       } else {
         result = await signUpUserAction(email, password, name);
         title = "Signed Up";
-        description = "Check your email for a confirmation Link";
+        description = "Check your email for a confirmation link";
       }
 
       if (!result.errorMessage) {
         router.push("/");
-        toast.success(`Welcome ${name}`);
+        toast.success(`Welcome ${name || email}`);
       } else {
-        toast(`Error:  ${result.errorMessage}`);
+        toast(`Error: ${result.errorMessage}`);
       }
     });
   };
@@ -58,8 +58,6 @@ export const AuthCard = ({ type }: AuthCardProps) => {
 
           <CardContent className="relative gap-2">
             <div className="space-y-6 mb-8">
-              {" "}
-              {/* Adjusted space-y */}
               <div>
                 <Label htmlFor="email" className="text-2xl font-semibold">
                   Email
@@ -92,7 +90,7 @@ export const AuthCard = ({ type }: AuthCardProps) => {
             <Button
               type="submit"
               variant={"ghost"}
-              className="border text-2xl px-4 py-6  transition-all mr-3 duration-300 hover:duration-500 hover:text-black hover:bg-white"
+              className="border text-2xl px-4 py-6 transition-all mr-3 duration-300 hover:duration-500 hover:text-black hover:bg-white"
             >
               {isPending ? (
                 <Loader2 className="animate-spin" />
@@ -103,16 +101,16 @@ export const AuthCard = ({ type }: AuthCardProps) => {
               )}
             </Button>
             <p className="text-sm font-thin flex gap-2 items-center">
-              {isLoginFrom
+              {isLoginForm
                 ? "Don't have an account yet"
                 : "Already have an account"}{" "}
               <Link
-                href={isLoginFrom ? "/sign-up" : "/login"}
-                className={`text-blue-400 underline hover:text-blue-500  font-medium ${
+                href={isLoginForm ? "/auth/sign-up" : "/auth/login"} // Fixed routes
+                className={`text-blue-400 underline hover:text-blue-500 font-medium ${
                   isPending ? "pointer-events-auto opacity-50" : ""
                 }`}
               >
-                {isLoginFrom ? "Sign Up" : "Login"}
+                {isLoginForm ? "Sign Up" : "Login"}
               </Link>
             </p>
           </CardFooter>

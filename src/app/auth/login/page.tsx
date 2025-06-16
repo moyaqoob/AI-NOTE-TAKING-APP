@@ -1,6 +1,6 @@
 import { AuthCard } from "../AuthForm";
 
-const Signin = () => {
+const Login = () => {
   return (
     <div>
       <AuthCard type="login" />
@@ -8,4 +8,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default Login;

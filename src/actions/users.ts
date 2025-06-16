@@ -34,12 +34,10 @@ export const signUpUserAction = async (
     }
 
     await prisma.user.create({
-      //@ts-ignore
       data: {
         id: userId,
         email,
         name,
-        password: "123123",
       },
     });
 

@@ -1,13 +1,11 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-provider";
-import { Toaster } from "sonner";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import Header from "@/components/Header";
 import { AppSidebar } from "@/components/ui/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import NoteProvider from "@/providers/note-provider";
-
-
+import { ThemeProvider } from "@/providers/theme-provider";
+import type { Metadata } from "next";
+import { Toaster } from "sonner";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,31 +18,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning >
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`antialiased`}>
+        className={`antialiased bg-black text-gray-200`} // Set dark background and light text
+      >
         <NoteProvider>
+          <ThemeProvider
+            attribute={"class"}
+            defaultTheme="dark" // Set default theme to dark
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider>
+              <AppSidebar />
+              <div className="flex min-h-screen w-full flex-col font-serif">
+                <Header />
+                <main className="flex flex-1 flex-col px-44 pt-10 xl:px-8">
+                  {children}
+                </main>
+              </div>
+            </SidebarProvider>
 
-        <ThemeProvider
-          attribute={"class"}
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          > 
-        <SidebarProvider>
-          <AppSidebar/>
-          <div className="flex min-h-screen w-full flex-col font-serif">
-              <Header/>
-              <main className="flex flex-1 flex-col px-44 pt-10 xl:px-8">
-                {children}
-              </main>
-          </div>
-          
-        </SidebarProvider>
-       
-          <Toaster/>
-        </ThemeProvider>
-      </NoteProvider>
+            <Toaster />
+          </ThemeProvider>
+        </NoteProvider>
       </body>
     </html>
   );
