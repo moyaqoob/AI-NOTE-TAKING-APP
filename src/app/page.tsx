@@ -3,6 +3,7 @@ import AskAIButton from "@/components/AskAIButton";
 import NewNoteButton from "@/components/NewNoteButton";
 import NoteTextInput from "@/components/NoteTextInput";
 import prisma from "@/prisma/prisma";
+import NotFound from "./not-found";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,6 +12,10 @@ type Props = {
 async function HomePage({ searchParams }: Props) {
   const noteIdParam = (await searchParams).noteId;
   const user = await getUser();
+
+  if(!noteIdParam){
+    <NotFound/>
+  }
 
   const noteId = Array.isArray(noteIdParam)
     ? noteIdParam![0]
