@@ -29,15 +29,17 @@ export const signUpUserAction = async (
     }
 
     const userId = data.user?.id;
+    console.log(userId);
     if (!userId) {
       return { errorMessage: "Failed to retrieve user ID from auth response" };
     }
 
-    await prisma.user.create({
+    await prisma.user?.create({
       data: {
         id: userId,
         email,
         name,
+        password
       },
     });
 

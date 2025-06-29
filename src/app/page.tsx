@@ -21,10 +21,10 @@ async function HomePage({ searchParams }: Props) {
   });
 
   return (
-    <div className="flex h-[92vh] bg-gradient-to-b from-[#0a0a0a] to-[#1a2a6c]  flex-col items-center -mt-10 gap-8  text-gray-200 ">
+    <div className="flex h-[92vh] bg-gradient-to-b from-[#1a2a6c] to-[#2d9cd7]  flex-col items-center -mt-10 gap-8  text-gray-200 ">
       {/* Header Section */}
       <div className="text-center">
-        <h1 className="text-4xl font-bold pt-7">Welcome to AI Notes</h1>
+        <h1 className="text-4xl shadow-blue-500/50 animate-shine font-bold text-shadow-gray-950 shiny pt-7">Welcome to AI Notes</h1>
         <p className="text-lg text-gray-400">
           Your personal AI-powered note-taking assistant.
         </p>

@@ -46,12 +46,12 @@ function SideBarGroupContent({ notes }: Props) {
   };
 
   return (
-    <SideGroupContentShadcn className="p-6 bg-orange-900 rounded-xl shadow-lg border border-blue-700">
+    <SideGroupContentShadcn className="p-6 bg-[#FFFBEA] rounded-xl shadow-lg border border-gray-300">
   {/* Search Bar */}
   <div className="relative flex items-center mb-6">
     <Input
       type="text"
-      className="rounded-full px-4 py-2 w-full font-medium bg-pink-950 text-black placeholder-gray-500 border border-gray-700 focus:ring-2 focus:ring-pink-900 shadow-md focus:outline-none"
+      className="rounded-full px-4 py-2 w-full font-medium bg-cream-600 text-gray-800 placeholder-gray-500 border border-gray-400 focus:ring-2 focus:ring-cream-300 shadow-md focus:outline-none"
       value={searchText}
       onChange={(e) => setSearchText(e.target.value)}
       placeholder="Search your notes..."
@@ -63,7 +63,7 @@ function SideBarGroupContent({ notes }: Props) {
     {filteredNotes.map((note) => (
       <SidebarMenuItem
         key={note.id}
-        className="flex items-center justify-between p-4 bg-yellow-800 text-cyan-600 text-md font-semibold rounded-lg hover:bg-gray-700 transition-colors duration-200 border border-gray-700 shadow-sm"
+        className="flex items-center justify-between p-4 bg-[#BBDEFB] text-gray-800 text-md font-semibold rounded-lg hover:bg-cream-300 transition-colors duration-200 border border-gray-300 shadow-sm"
       >
         <SelectNoteButton note={note} />
         <DeleteNoteItem
@@ -81,6 +81,7 @@ function SideBarGroupContent({ notes }: Props) {
     </div>
   )}
 </SideGroupContentShadcn>
+
   )
 }
 

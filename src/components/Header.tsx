@@ -30,7 +30,7 @@ function Header() {
 
   return (
     <>
-      <header className="bg-popover relative bg-gradient-to-l from-[#010101] to-[#041e53] flex justify-between items-center px-3 py-4 sm:px-8 shadow-md shadow-gray-500">
+      <header className="bg-[#42A5F5] relative bg-gradient-to-l flex justify-between items-center px-3 py-4 sm:px-8 shadow-md shadow-gray-500">
         {/* Only show SidebarTrigger if the user is logged in */}
         {user && <SidebarTrigger className="absolute left-1" />}
         <Link href={"/"} className="flex items-center gap-3" onClick={homePage}>
@@ -42,7 +42,7 @@ function Header() {
             alt="App logo"
             priority
           />
-          <h1 className="text-2xl font-serif ">
+          <h1 className="text-2xl font-serif text-black ">
             AI-<span>Notes App</span>
           </h1>
         </Link>
