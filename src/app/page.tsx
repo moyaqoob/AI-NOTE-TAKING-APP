@@ -21,9 +21,13 @@ async function HomePage({ searchParams }: Props) {
     ? noteIdParam![0]
     : noteIdParam || "";
 
-  const note = await prisma.note.findFirstOrThrow({
-    where: { id: noteId, authorId: user?.id },
-  });
+  const note = await prisma.note.findFirst({
+  where: { id: noteId, authorId: user?.id },
+});
+
+if (!note) {
+  return <div>No note found. Create your first note!</div>;
+}
 
   return (
     <div className="flex h-[92vh] bg-gradient-to-b from-[#1a2a6c] to-[#2d9cd7]  flex-col items-center -mt-10 gap-8  text-gray-200 ">
