@@ -21,7 +21,7 @@ async function HomePage({ searchParams }: Props) {
     ? noteIdParam![0]
     : noteIdParam || "";
 
-  const note = await prisma.note.findFirst({
+  const note = await prisma.note?.findFirst({
   where: { id: noteId, authorId: user?.id },
 });
 
