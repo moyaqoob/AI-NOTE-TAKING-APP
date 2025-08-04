@@ -25,18 +25,12 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
+            supabaseResponse.cookies.set(name, value, options)
           );
         },
       },
-    },
+    }
   );
 
   const isAuthRoute =
@@ -49,7 +43,7 @@ export async function updateSession(request: NextRequest) {
     } = await supabase.auth.getUser();
     if (user) {
       return NextResponse.redirect(
-        new URL("/", process.env.NEXT_PUBLIC_BASE_URL),
+        new URL("/", process.env.NEXT_PUBLIC_BASE_URL)
       );
     }
   }
@@ -63,7 +57,7 @@ export async function updateSession(request: NextRequest) {
 
     if (user) {
       const { newestNoteId } = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?userId=${user.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?userId=${user.id}`
       ).then((res) => res.json());
 
       if (newestNoteId) {
@@ -78,7 +72,7 @@ export async function updateSession(request: NextRequest) {
             headers: {
               "Content-Type": "application/json",
             },
-          },
+          }
         ).then((res) => res.json());
         const url = request.nextUrl.clone();
         url.searchParams.set("noteId", noteId);

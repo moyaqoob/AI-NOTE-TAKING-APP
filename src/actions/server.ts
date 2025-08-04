@@ -7,7 +7,7 @@ export async function createClient() {
 
   const client = createServerClient(
     process.env.SUPABASE_URL || "",
-    process.env.SUPABASE_SECRET || "",
+    process.env.SUPABASE_ANON_KEY || "",
     {
       cookies: {
         getAll() {
