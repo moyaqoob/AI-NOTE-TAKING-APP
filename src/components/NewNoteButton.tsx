@@ -30,7 +30,7 @@ function NewNoteButton({ user }: Props) {
     }
 
     if (!user) {
-      router.push("/login");
+      router.push("/auth/login");
     } else {
       setloading(true);
       const savingToast = toast("Saving current note", {
