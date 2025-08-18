@@ -84,7 +84,7 @@ export const askAIAboutNotesAction = async ({
     if (!user) throw new Error("You must be logged in to ask AI questions");
 
     const notes = await prisma.note?.findMany({
-      where: { authorId: user.id },
+      where: { authorId: user?.id },
       orderBy: { createdAt: "desc" },
       select: { text: true, createdAt: true, updatedAt: true },
     });

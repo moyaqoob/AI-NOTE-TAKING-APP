@@ -2,7 +2,6 @@ import { getUser } from "@/actions/server";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
 import prisma from "@/prisma/prisma";
